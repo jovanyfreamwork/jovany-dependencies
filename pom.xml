@@ -26,11 +26,25 @@
 				<artifactId>jovany-units</artifactId>
 				<version>1.0.0</version>
 			</dependency>
+
+			<dependency>
+				<groupId>jovany</groupId>
+				<artifactId>jovany-command</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>jovany</groupId>
+				<artifactId>jovany-ffmpeg</artifactId>
+				<version>1.0.0</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<modules>
 		<module>jovany-units</module>
+		<module>jovany-command</module>
+		<module>jovany-ffmpeg</module>
 	</modules>
 
 	<build>
