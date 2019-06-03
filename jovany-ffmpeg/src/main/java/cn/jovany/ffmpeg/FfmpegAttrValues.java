@@ -5,9 +5,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.Function;
 
+import cn.jovany.command.Command;
 import cn.jovany.command.ValueGenerator;
 
-public class FfmpegAttrValues implements Iterable<Object> {
+public class FfmpegAttrValues implements Command, Iterable<Object> {
 
 	private final String ffmpegAttr;
 
@@ -35,6 +36,11 @@ public class FfmpegAttrValues implements Iterable<Object> {
 		return value;
 	}
 
+	@Override
+	public String toString() {
+		return toCommand();
+	}
+
 	public String attr() {
 		return ffmpegAttr;
 	}
@@ -50,6 +56,24 @@ public class FfmpegAttrValues implements Iterable<Object> {
 	@Override
 	public Iterator<Object> iterator() {
 		return attrValues.iterator();
+	}
+
+	@Override
+	public String toCommand() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(ffmpegAttr);
+		if (attrValues.isEmpty()) {
+			return builder.toString();
+		}
+		int i = 0;
+		Iterator<Object> attrValues = this.attrValues.iterator();
+		while (attrValues.hasNext()) {
+			if (i++ < this.attrValues.size()) {
+				builder.append(' ');
+			}
+			builder.append(attrValues.next());
+		}
+		return builder.toString();
 	}
 
 }

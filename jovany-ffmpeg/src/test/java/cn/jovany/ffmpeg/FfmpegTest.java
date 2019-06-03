@@ -32,7 +32,7 @@ public class FfmpegTest {
 	public void testFfmpeg(Ffmpeg ffmpeg) throws MalformedPatternException {
 		Integer durationByMillisecond = ffmpeg.build()
 				.append("-i",
-						new File("/Users/wangqi/ffmpegDir/47402cfd-82b4-11e9-86c3-005056b13ddf.mp4")::getAbsoluteFile)
+						new File("/Users/wangqi/ffmpegDir/47402cfd-82b4-11e9-86c3-005056b13ddf.mp4")::getAbsolutePath)
 				.execute(t -> t.regex("Duration: (.*?), start: (.*?), bitrate: (.*?)", 1).indexOf(0)
 						.get(t1 -> t1.regex("(\\d\\d?):(\\d\\d?):(\\d\\d?)\\.(\\d\\d?)", 4).apply(re1 -> {
 							BigDecimal hour = new BigDecimal(re1.group(0));

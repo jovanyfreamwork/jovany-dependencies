@@ -11,7 +11,7 @@ public class FfmpegArgs implements Command, Iterable<FfmpegAttrValues> {
 	private List<FfmpegAttrValues> args = new ArrayList<>();
 
 	private final FfmpegBuilder ffmpegBuilder;
-	
+
 	public FfmpegArgs(FfmpegBuilder ffmpegBuilder) {
 		this.ffmpegBuilder = ffmpegBuilder;
 	}
@@ -24,7 +24,7 @@ public class FfmpegArgs implements Command, Iterable<FfmpegAttrValues> {
 
 	@Override
 	public String toCommand() {
-		return null;
+		return String.join(" ", args.stream().map(FfmpegAttrValues::toCommand).toArray(String[]::new));
 	}
 
 	public List<FfmpegAttrValues> getArgs() {
@@ -43,8 +43,10 @@ public class FfmpegArgs implements Command, Iterable<FfmpegAttrValues> {
 	public FfmpegBuilder ffmpegBuilder() {
 		return ffmpegBuilder;
 	}
-	
-	
-		
+
+	@Override
+	public String toString() {
+		return toCommand();
+	}
 
 }

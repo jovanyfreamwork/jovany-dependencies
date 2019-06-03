@@ -35,6 +35,10 @@ public class FfmpegBuilder implements Command, CommandBuilder {
 	public <R, T> R apply(T t, Function<T, R> error) {
 		return error.apply(t);
 	}
+	
+	public <R> R apply(Function<FfmpegBuilder, R> error) {
+		return error.apply(this);
+	}
 
 	public <T> void accept(T t, Consumer<T> error) {
 		error.accept(t);
@@ -89,6 +93,11 @@ public class FfmpegBuilder implements Command, CommandBuilder {
 			this.accept(e, error);
 			throw new NullPointerException();
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return toCommand();
 	}
 
 }
