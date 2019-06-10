@@ -1,28 +1,25 @@
-package cn.jovany.ffmpeg;
+package cn.jovany.command;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.Function;
 
-import cn.jovany.command.Command;
-import cn.jovany.command.ValueGenerator;
-
-public class FfmpegAttrValues implements Command, Iterable<Object> {
+public class CommandAttrValues implements Command, Iterable<Object> {
 
 	private final String ffmpegAttr;
 
 	private final Collection<Object> attrValues;
 
-	private final FfmpegArgs ffmpegArgs;
+	private final CommandArgs commandArgs;
 
-	public FfmpegAttrValues(FfmpegArgs ffmpegArgs, String ffmpegAttr) {
-		this.ffmpegArgs = ffmpegArgs;
+	public CommandAttrValues(CommandArgs commandArgs, String ffmpegAttr) {
+		this.commandArgs = commandArgs;
 		this.ffmpegAttr = ffmpegAttr;
 		this.attrValues = new ArrayList<>();
 	}
 
-	public FfmpegAttrValues apply(Function<FfmpegAttrValues, FfmpegAttrValues> function) {
+	public CommandAttrValues apply(Function<CommandAttrValues, CommandAttrValues> function) {
 		return function.apply(this);
 	}
 
@@ -45,12 +42,12 @@ public class FfmpegAttrValues implements Command, Iterable<Object> {
 		return ffmpegAttr;
 	}
 
-	public FfmpegArgs andThen() {
-		return ffmpegArgs;
+	public CommandArgs andThen() {
+		return commandArgs;
 	}
 
-	public FfmpegBuilder and() {
-		return ffmpegArgs.ffmpegBuilder();
+	public CommandContext and() {
+		return commandArgs.commandContext();
 	}
 
 	@Override

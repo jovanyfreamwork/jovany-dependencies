@@ -1,4 +1,4 @@
-package cn.jovany.ffmpeg;
+package cn.jovany.command;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,18 +8,10 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import cn.jovany.command.Command;
-import cn.jovany.command.CommandBuilder;
-import cn.jovany.command.CommandExecuter;
-import cn.jovany.command.CommandResultSet;
-import cn.jovany.command.Executor;
-import cn.jovany.command.ExecutorBuilder;
-import cn.jovany.command.ValueGenerator;
-
-public class FfmpegBuilder implements Command, CommandBuilder {
+public class CommandContext implements Command, CommandBuilder {
 
 	private final File ffmpage;
-	private final FfmpegArgs args;
+	private final CommandArgs args;
 
 	private Consumer<Throwable> error;
 
@@ -27,7 +19,7 @@ public class FfmpegBuilder implements Command, CommandBuilder {
 		return error;
 	}
 
-	public FfmpegBuilder error(Consumer<Throwable> error) {
+	public CommandContext error(Consumer<Throwable> error) {
 		this.error = error;
 		return this;
 	}
@@ -36,7 +28,7 @@ public class FfmpegBuilder implements Command, CommandBuilder {
 		return error.apply(t);
 	}
 	
-	public <R> R apply(Function<FfmpegBuilder, R> error) {
+	public <R> R apply(Function<CommandContext, R> error) {
 		return error.apply(this);
 	}
 
@@ -44,20 +36,20 @@ public class FfmpegBuilder implements Command, CommandBuilder {
 		error.accept(t);
 	}
 
-	public FfmpegBuilder(File ffmpeg) {
+	public CommandContext(File ffmpeg) {
 		super();
 		this.ffmpage = ffmpeg;
-		this.args = new FfmpegArgs(this);
+		this.args = new CommandArgs(this);
 	}
 
-	public FfmpegAttrValues append(String attr) {
+	protected CommandAttrValues append(String attr) {
 		return args.append(attr);
 	}
 
-	public FfmpegBuilder append(String attr, ValueGenerator<?>... vgs) {
-		FfmpegAttrValues ffmpegAttrValues = args.append(attr);
+	public CommandContext append(String attr, ValueGenerator<?>... vgs) {
+		CommandAttrValues commandAttrValues = args.append(attr);
 		for (ValueGenerator<?> gen : vgs) {
-			ffmpegAttrValues.value(gen);
+			commandAttrValues.value(gen);
 		}
 		return this;
 	}
