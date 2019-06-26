@@ -1,54 +1,77 @@
 package cn.jovany.command;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
+/**
+ * 命令执行器
+ * 
+ * @author wangqi
+ *
+ */
 public class CommandExecuter {
 
-	private final List<String> command;
+	private final ProcessBuilder command;
 
-	private Consumer<Throwable> error;
+	/**
+	 * 命令执行器构造器
+	 * 
+	 * @param command 可执行的命令（按命名单词分割）
+	 */
+	public CommandExecuter(List<String> command) {
+		super();
+		this.command = new ProcessBuilder();
+		this.command.command(command);
+		this.command.redirectErrorStream(true);
 
-	public Consumer<Throwable> error() {
-		return error;
 	}
 
-	public CommandExecuter error(Consumer<Throwable> error) {
-		this.error = error;
+	/**
+	 * 命令执行器构造器
+	 * 
+	 * @param builder 命令构建器
+	 */
+	public CommandExecuter(CommandBuilder builder) {
+		this(builder.build());
+	}
+
+	/**
+	 * <h2>指定当前命令的执行目录 <small>相当于执行了<code>cd ${path}命令</code></small></h2>
+	 * 
+	 * @param path
+	 * @return
+	 * @throws IOException
+	 */
+	public CommandExecuter directory(Path path) throws IOException {
+		if (Files.notExists(path)) {
+			Files.createDirectories(path);
+		}
+		command.directory(path.toFile());
 		return this;
 	}
 
-	public CommandExecuter(List<String> command) {
-		super();
-		this.command = command;
+	/**
+	 * <h3>执行命令 <small> 可更改默认的执行进程参数 </small></h3>
+	 * 
+	 * @param processBuilder 进程构建器扩展接口
+	 * @return
+	 * @throws IOException
+	 */
+	public ProcessExecuter execute(Function<ProcessBuilder, ProcessBuilder> processBuilder) throws IOException {
+		return new ProcessExecuter(processBuilder.apply(this.command).start());
 	}
 
-	public CommandExecuter(CommandBuilder builder) {
-		super();
-		this.command = builder.build();
-	}
-
-	public CommandResultSet execute() throws IOException {
-		ProcessBuilder builder = new ProcessBuilder();
-		builder.command(command);
-		builder.redirectErrorStream(true);
-		Process p = builder.start();
-		BufferedReader buf = null;
-		String line = null;
-		buf = new BufferedReader(new InputStreamReader(p.getInputStream()));
-		StringBuffer sb = new StringBuffer();
-		while ((line = buf.readLine()) != null) {
-			sb.append(line);
-			continue;
-		}
-		return new CommandResultSet(sb.toString());
-	}
-
-	public List<String> getCommand() {
-		return command;
+	/**
+	 * <h3>执行命令</h3>
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
+	public ProcessExecuter execute() throws IOException {
+		return new ProcessExecuter(command.start());
 	}
 
 }

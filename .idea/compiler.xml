@@ -6,12 +6,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="jovany-command" />
+        <module name="jovany-ffmpeg" />
         <module name="jovany-units" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="jovany-command" options="-parameters" />
+      <module name="jovany-ffmpeg" options="-parameters" />
       <module name="jovany-units" options="-parameters" />
     </option>
   </component>
