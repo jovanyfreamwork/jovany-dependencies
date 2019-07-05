@@ -7,34 +7,25 @@
 		<artifactId>jovany-dependencies</artifactId>
 		<version>1.0.0</version>
 	</parent>
-	<artifactId>jovany-ffmpeg</artifactId>
-
+	<artifactId>jovany-signature</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
 		<dependency>
-			<groupId>jovany</groupId>
-			<artifactId>jovany-command</artifactId>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
 		<dependency>
-			<groupId>jovany</groupId>
-			<artifactId>jovany-signature</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.freemarker</groupId>
-			<artifactId>freemarker</artifactId>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
-
 </project>

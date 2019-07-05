@@ -119,12 +119,44 @@ public interface SignatureTaskExecuter<T> {
 	 */
 	public default SignatureToken apply(final String secret, final int milliSecond, Map<String, Object> data)
 			throws Exception {
-		SignatureToken token = new SignatureToken();
-		token.setSecret(secret);
-		token.setData(data);
+		SignatureToken token = buildSignatureToken(secret, data);
 		SignatureProvider provider = signatureProvider(token);
 		token = provider.applySignatureLock(token, milliSecond);
 		return token;
+	}
+
+	public default SignatureToken get(final String secret, Map<String, Object> data) {
+		SignatureToken token = buildSignatureToken(secret, data);
+		try {
+			SignatureProvider provider = signatureProvider(token);
+			byte[] content = provider.readSignature();
+			if (content == null || content.length == 0) {
+				return null;
+			}
+			String signature = new String(content);
+			try {
+				provider.verify(token, signature);
+				provider.decode(token, signature).forEach((k, v) -> data.put(k, v));
+			} catch (JwtException e) {
+				return null;
+			}
+			return new SignatureToken(token, signature);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public default SignatureToken getOrApply(final String secret, final int milliSecond, Map<String, Object> data)
+			throws Exception {
+		SignatureToken token = get(secret, data);
+		if (token == null) {
+			token = apply(secret, milliSecond, data);
+		}
+		return token;
+	}
+
+	public default SignatureToken buildSignatureToken(final String secret, Map<String, Object> data) {
+		return new SignatureToken(secret, data);
 	}
 
 	/**
@@ -151,20 +183,17 @@ public interface SignatureTaskExecuter<T> {
 		});
 	}
 
+	public default SignatureToken buildSignatureToken(String secret, Map<String, Object> data, String signature) {
+		return new SignatureToken(buildSignatureToken(secret, data), signature);
+	}
+
 	public default Callable<T> buildTaskCallback(String secret, String signature, Map<String, Object> data)
 			throws Exception {
 		try {
-			SignatureToken token = new SignatureToken();
-			token.setSecret(secret);
-			token.setData(data);
-			token.setSignature(signature);
-
+			SignatureToken token = buildSignatureToken(secret, data, signature);
 			SignatureProvider provider = signatureProvider(token);
-
 			provider.verifyToken(token);
-
 			provider.lockSignature();
-
 			return callback(token, provider);
 		} catch (InvalidParameterException | InvalidSignatureException e) {
 			throw e;
@@ -187,10 +216,7 @@ public interface SignatureTaskExecuter<T> {
 	public default ListenableFutureTask<T> buildTask(String secret, String signature, Map<String, Object> data)
 			throws Exception {
 		try {
-			SignatureToken token = new SignatureToken();
-			token.setSecret(secret);
-			token.setData(data);
-			token.setSignature(signature);
+			SignatureToken token = buildSignatureToken(secret, data, signature);
 
 			SignatureProvider provider = signatureProvider(token);
 

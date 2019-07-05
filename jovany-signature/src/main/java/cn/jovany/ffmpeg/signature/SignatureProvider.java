@@ -44,17 +44,16 @@ public interface SignatureProvider {
 	public default SignatureToken applySignatureLock(SignatureToken token, int milliSecond)
 			throws IOException, LockedSignatureException {
 		String signature = encode(token, milliSecond);
-		decode(token, signature).forEach((k, v) -> token.getData().put(k, v));
 		if (existsSignature()) {
 			byte[] signatureExist = readSignature();
 			if (signatureExist != null && signatureExist.length != 0) {
 				try {
 					String signatureExistStr = new String(signatureExist);
 					verify(token, signatureExistStr);
-					throw new LockedSignatureException(token);
 				} catch (ExpiredJwtException e) {
 					unlock(token);
 				} catch (JwtException e) {
+					throw new LockedSignatureException(token);
 				}
 			}
 		}

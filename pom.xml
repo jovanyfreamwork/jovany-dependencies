@@ -37,6 +37,12 @@
 
 			<dependency>
 				<groupId>jovany</groupId>
+				<artifactId>jovany-signature</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>jovany</groupId>
 				<artifactId>jovany-ffmpeg</artifactId>
 				<version>1.0.0</version>
 			</dependency>
@@ -46,6 +52,7 @@
 	<modules>
 		<module>jovany-command</module>
 		<module>jovany-ffmpeg</module>
+		<module>jovany-signature</module>
 	</modules>
 
 	<build>

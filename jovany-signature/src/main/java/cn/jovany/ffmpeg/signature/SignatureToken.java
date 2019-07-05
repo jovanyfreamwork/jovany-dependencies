@@ -10,7 +10,7 @@ public class SignatureToken {
 	/**
 	 * 签名令牌密钥
 	 */
-	@JsonIgnore
+//	@JsonIgnore
 	private String secret;
 
 	/**
@@ -29,23 +29,6 @@ public class SignatureToken {
 	private Map<String, Object> env;
 
 	/**
-	 * 空构造器
-	 */
-	public SignatureToken() {
-		super();
-		setEnv(new LinkedHashMap<>());
-	}
-
-	/**
-	 * 申请令牌时调用的构造器
-	 * 
-	 * @param secret
-	 */
-	public SignatureToken(String secret) {
-		this(secret, new LinkedHashMap<>(), new LinkedHashMap<>());
-	}
-
-	/**
 	 * 申请令牌时调用的构造器
 	 * 
 	 * @param secret 请求密钥
@@ -62,7 +45,7 @@ public class SignatureToken {
 	 * @param data   请求参数
 	 * @param env    环境变量
 	 */
-	private SignatureToken(String secret, Map<String, Object> data, Map<String, Object> env) {
+	protected SignatureToken(String secret, Map<String, Object> data, Map<String, Object> env) {
 		super();
 		this.secret = secret;
 		this.data = data;
